@@ -1,24 +1,64 @@
 {
   "expo": {
-    "name": "zenvy-mobile-js",
+    "name": "Zenvy",
     "slug": "zenvy-mobile-js",
     "version": "1.0.0",
+    "scheme": "zenvy",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "backgroundColor": "#F6F5F0",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zenvy.style"
     },
     "android": {
+      "package": "com.zenvy.style",
+      "permissions": [
+        "android.permission.ACTIVITY_RECOGNITION"
+      ],
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#526A4B",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      ["expo-splash-screen", { "image": "./assets/splash-icon.png", "imageWidth": 145, "resizeMode": "contain", "backgroundColor": "#F6F5F0", "dark": { "backgroundColor": "#141A16", "image": "./assets/splash-icon.png" } }],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Zenvy to photograph pieces for your wardrobe.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Zenvy to add photos of pieces to your wardrobe.",
+          "cameraPermission": "Allow Zenvy to photograph new wardrobe pieces.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Zenvy to find local style spots near you."
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow Zenvy to use motion for your style activity insights."
+        }
+      ],
+      "expo-splash-screen"
+    ]
   }
 }
