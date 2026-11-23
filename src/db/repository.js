@@ -116,3 +116,42 @@ export async function getActivityBaseline(db) {
   const row = await db.getFirstAsync('SELECT steps FROM activity_log ORDER BY id DESC LIMIT 1');
   return row?.steps ?? 0;
 }
+
+export async function getFollowing(db) {
+  return db.getAllAsync('SELECT * FROM followed_creators ORDER BY display_name');
+}
+export async function isFollowing(db, creatorId) {
+  return Boolean(await db.getFirstAsync('SELECT creator_id FROM followed_creators WHERE creator_id = ?', creatorId));
+}
+export async function toggleFollowing(db, creatorId, displayName) {
+  if (await isFollowing(db, creatorId)) await db.runAsync('DELETE FROM followed_creators WHERE creator_id = ?', creatorId);
+  else await db.runAsync('INSERT OR IGNORE INTO followed_creators (creator_id,display_name) VALUES (?,?)', creatorId, displayName);
+}
+export async function getCreatorOutfits(db, creatorId) {
+  return db.getAllAsync('SELECT * FROM creator_outfit_history WHERE creator_id = ? ORDER BY worn_on DESC', creatorId);
+}
+export async function getFollowingOutfits(db) {
+  return db.getAllAsync('SELECT h.* FROM creator_outfit_history h INNER JOIN followed_creators f ON f.creator_id = h.creator_id ORDER BY h.worn_on DESC, h.id DESC');
+}
+export async function getConversations(db) {
+  return db.getAllAsync('SELECT * FROM chat_conversations ORDER BY updated_at DESC, id');
+}
+export async function getMessages(db, conversationId) {
+  return db.getAllAsync('SELECT * FROM chat_messages WHERE conversation_id = ? ORDER BY id', conversationId);
+}
+export async function sendLocalMessage(db, conversationId, body) {
+  await db.runAsync('INSERT INTO chat_messages (conversation_id,sender,body,sync_status) VALUES (?,?,?,?)', conversationId, 'me', body.trim(), 'local');
+  await db.runAsync('UPDATE chat_conversations SET last_message = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', body.trim(), conversationId);
+}
+export async function getAssistantMessages(db) {
+  return db.getAllAsync('SELECT * FROM assistant_messages ORDER BY id');
+}
+export async function addAssistantMessage(db, role, body) {
+  await db.runAsync('INSERT INTO assistant_messages (role,body) VALUES (?,?)', role, body);
+}
+export async function getNotificationPreferences(db) {
+  return db.getFirstAsync('SELECT * FROM notification_preferences WHERE id = 1');
+}
+export async function updateReminderPreference(db, enabled, hour = 8, minute = 30) {
+  await db.runAsync('UPDATE notification_preferences SET outfit_reminder = ?, reminder_hour = ?, reminder_minute = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1', enabled ? 1 : 0, hour, minute);
+}
