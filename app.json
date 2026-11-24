@@ -29,7 +29,19 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      ["expo-splash-screen", { "image": "./assets/splash-icon.png", "imageWidth": 145, "resizeMode": "contain", "backgroundColor": "#F6F5F0", "dark": { "backgroundColor": "#141A16", "image": "./assets/splash-icon.png" } }],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 145,
+          "resizeMode": "contain",
+          "backgroundColor": "#F6F5F0",
+          "dark": {
+            "backgroundColor": "#141A16",
+            "image": "./assets/splash-icon.png"
+          }
+        }
+      ],
       [
         "expo-camera",
         {
@@ -58,7 +70,8 @@
           "motionPermission": "Allow Zenvy to use motion for your style activity insights."
         }
       ],
-      "expo-splash-screen"
+      ["expo-notifications", { "color": "#526A4B", "defaultChannel": "style-updates" }],
+      ["expo-secure-store", { "configureAndroidBackup": true }]
     ]
   }
 }
